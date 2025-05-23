@@ -1,0 +1,30 @@
+{
+  "name": "@composehq/faker",
+  "description": "An open-source, zero-dependency library for generating fake data.",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "rm -rf dist; tsc && tsc-alias",
+    "watch": "tsc --watch",
+    "lint": "pnpm run type-check",
+    "type-check": "tsc --noEmit",
+    "publish-package": "pnpm build && pnpm publish --access public",
+    "test": "vitest run --config ./vitest.config.ts",
+    "bench": "vitest bench --run"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
+  },
+  "license": "Apache-2.0"
+}
