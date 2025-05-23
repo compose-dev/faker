@@ -19,7 +19,7 @@ function generateBoolean(trueChance: number = 0.5) {
 
 const TIERS = ["Basic", "Premium", "Enterprise"] as const;
 
-function generateTier() {
+function generateTier(): (typeof TIERS)[number] {
   return TIERS[Math.floor(Math.random() * TIERS.length)];
 }
 
