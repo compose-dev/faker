@@ -6,7 +6,7 @@ type StringFlag = { type: "string"; value: string };
 type FeatureFlag = BooleanFlag | NumericFlag | StringFlag;
 
 // Predefined feature flags with realistic names and values
-const FEATURE_FLAGS: Record<string, FeatureFlag> = {
+const FEATURE_FLAG_OPTIONS: Record<string, FeatureFlag> = {
   // Boolean flags
   darkMode: { type: "boolean", value: true },
   betaFeatures: { type: "boolean", value: false },
@@ -35,7 +35,7 @@ const FEATURE_FLAGS: Record<string, FeatureFlag> = {
 };
 
 // Flag keys in a consistent order
-const FLAG_KEYS = Object.keys(FEATURE_FLAGS);
+const FLAG_KEYS = Object.keys(FEATURE_FLAG_OPTIONS);
 
 /**
  * Generates a consistent set of feature flags.
@@ -57,11 +57,11 @@ function generateFeatureFlags(
 
   // Add each selected flag to the result
   for (const flagName of selectedFlags) {
-    const flag = FEATURE_FLAGS[flagName];
+    const flag = FEATURE_FLAG_OPTIONS[flagName];
     result[flagName] = flag.value;
   }
 
   return result;
 }
 
-export { generateFeatureFlags as featureFlags };
+export { generateFeatureFlags as featureFlags, FEATURE_FLAG_OPTIONS };
