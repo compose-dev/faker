@@ -1,7 +1,7 @@
 {
   "name": "@composehq/faker",
   "description": "An open-source, zero-dependency library for generating fake data.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

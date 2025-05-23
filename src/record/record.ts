@@ -1,4 +1,5 @@
 import * as primitives from "../primitives";
+import * as helpers from "../helpers";
 import {
   TYPE,
   FALLBACKS,
@@ -23,8 +24,14 @@ type RecordReturnType<T extends Record<string, FieldDefinition>> = {
           ? Date
           : T[K] extends { type: BooleanType } | BooleanType
             ? boolean
-            : T[K] extends { type: typeof TYPE.tier } | typeof TYPE.tier
-              ? ReturnType<typeof primitives.tier>
+            : T[K] extends
+                  | { type: typeof TYPE.arrayElement }
+                  | typeof TYPE.arrayElement
+              ? T[K] extends { options: infer TArrayElementOptions }
+                ? TArrayElementOptions extends any[]
+                  ? TArrayElementOptions[number]
+                  : never
+                : never
               : never
     : T[K] extends { type: typeof TYPE.featureFlags } | typeof TYPE.featureFlags
       ? Record<string, string | number | boolean>
@@ -101,8 +108,10 @@ function generateRecord<T extends Record<string, FieldDefinition>>(
         );
         break;
       }
-      case TYPE.tier: {
-        row[key] = primitives.tier();
+      case TYPE.arrayElement: {
+        row[key] = helpers.array.pick(
+          object.options ?? FALLBACKS.arrayElementOptions
+        );
         break;
       }
       default: {

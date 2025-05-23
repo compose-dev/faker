@@ -25,7 +25,7 @@ const TYPE = {
 
   // Other types
   featureFlags: "featureFlags",
-  tier: "tier",
+  arrayElement: "arrayElement",
 } as const;
 
 type StringType =
@@ -91,8 +91,10 @@ interface BooleanDefinition extends BaseDefinition {
   trueChance: number;
 }
 
-interface TierDefinition extends BaseDefinition {
-  type: typeof TYPE.tier;
+interface ArrayElementDefinition<TArrayElementOptions extends any[] = any[]>
+  extends BaseDefinition {
+  type: typeof TYPE.arrayElement;
+  options: TArrayElementOptions;
 }
 
 interface DateDefinition extends BaseDefinition {
@@ -112,7 +114,7 @@ type FieldDefinition =
   | FeatureFlagsDefinition
   | UUIDDefinition
   | BooleanDefinition
-  | TierDefinition
+  | ArrayElementDefinition
   | DateDefinition
   | Type;
 
@@ -126,6 +128,7 @@ const FALLBACKS = {
   maxDate: helpers.date.addDays(new Date(), 30),
   trueChance: 0.5,
   featureFlagsCount: 5,
+  arrayElementOptions: ["Basic", "Premium", "Enterprise"],
 } as const;
 
 export { TYPE, FALLBACKS };

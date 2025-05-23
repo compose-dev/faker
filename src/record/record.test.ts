@@ -127,6 +127,19 @@ describe("record", () => {
     // This test might occasionally fail due to randomness, but it's a good sanity check
     expect(result1.name).not.toBe(result2.name);
   });
+
+  it("should generate a single record with arrayElement field", () => {
+    const result = record({
+      tier: {
+        type: "arrayElement",
+        options: ["One", "Two", "Three"] as const,
+      },
+    });
+
+    expect(result).toHaveProperty("tier");
+    expect(typeof result.tier).toBe("string");
+    expect(result.tier).toBeOneOf(["One", "Two", "Three"]);
+  });
 });
 
 describe("records", () => {
