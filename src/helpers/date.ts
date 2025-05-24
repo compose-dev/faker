@@ -9,4 +9,12 @@ function addHours(date: Date, hours: number) {
   return new Date(date.getTime() + hours * ONE_HOUR_IN_MS);
 }
 
-export { addDays, addHours };
+function daysFromNow(days: number) {
+  return addDays(new Date(), days);
+}
+
+function hoursFromNow(hours: number) {
+  return addHours(new Date(), hours);
+}
+
+export { addDays, addHours, daysFromNow, hoursFromNow };

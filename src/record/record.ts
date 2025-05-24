@@ -28,11 +28,19 @@ type RecordReturnType<T extends Record<string, FieldDefinition>> = {
                   | { type: typeof TYPE.arrayElement }
                   | typeof TYPE.arrayElement
               ? T[K] extends { options: infer TArrayElementOptions }
-                ? TArrayElementOptions extends any[]
+                ? TArrayElementOptions extends readonly any[]
                   ? TArrayElementOptions[number]
                   : never
                 : never
-              : never
+              : T[K] extends
+                    | { type: typeof TYPE.arrayElements }
+                    | typeof TYPE.arrayElements
+                ? T[K] extends { options: infer TArrayElementOptions }
+                  ? TArrayElementOptions extends readonly any[]
+                    ? TArrayElementOptions[number][]
+                    : never
+                  : never
+                : never
     : T[K] extends { type: typeof TYPE.featureFlags } | typeof TYPE.featureFlags
       ? Record<string, string | number | boolean>
       : never;
@@ -111,6 +119,15 @@ function generateRecord<T extends Record<string, FieldDefinition>>(
       case TYPE.arrayElement: {
         row[key] = helpers.array.pick(
           object.options ?? FALLBACKS.arrayElementOptions
+        );
+        break;
+      }
+      case TYPE.arrayElements: {
+        row[key] = helpers.array.pickMultiple(
+          object.options ?? FALLBACKS.arrayElementOptions,
+          object.count ?? FALLBACKS.arrayElementsCount,
+          object.variance ?? FALLBACKS.arrayElementsVariance,
+          object.unique ?? FALLBACKS.arrayElementsUnique
         );
         break;
       }

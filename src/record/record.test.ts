@@ -76,6 +76,122 @@ describe("record", () => {
     });
   });
 
+  it("should generate a single record with arrayElement field", () => {
+    const options = ["Basic", "Premium", "Enterprise"];
+    const result = record({
+      plan: { type: "arrayElement", options },
+    });
+
+    expect(result).toHaveProperty("plan");
+    expect(typeof result.plan).toBe("string");
+    expect(options).toContain(result.plan);
+  });
+
+  it("should generate a single record with arrayElement field using default options", () => {
+    const result = record({
+      plan: "arrayElement",
+    });
+
+    expect(result).toHaveProperty("plan");
+    expect(typeof result.plan).toBe("string");
+    expect(["Basic", "Premium", "Enterprise"]).toContain(result.plan);
+  });
+
+  it("should generate a single record with arrayElements field", () => {
+    const options = ["red", "green", "blue", "yellow", "purple"] as const;
+    const result = record({
+      colors: { type: "arrayElements", options, count: 3 },
+    });
+
+    expect(result).toHaveProperty("colors");
+    expect(Array.isArray(result.colors)).toBe(true);
+    expect(result.colors).toHaveLength(3);
+
+    // All elements should be from the options array
+    result.colors.forEach((color) => {
+      expect(options).toContain(color);
+    });
+
+    // By default, elements should be unique
+    const uniqueColors = new Set(result.colors);
+    expect(uniqueColors.size).toBe(result.colors.length);
+  });
+
+  it("should generate arrayElements with variance", () => {
+    const options = ["a", "b", "c", "d", "e", "f"];
+    const results: number[] = [];
+
+    // Generate multiple records to test variance
+    for (let i = 0; i < 20; i++) {
+      const result = record({
+        items: { type: "arrayElements", options, count: 3, variance: 2 },
+      });
+      results.push(result.items.length);
+    }
+
+    // With count=3 and variance=2, we should see lengths between 1 and 5
+    const minLength = Math.min(...results);
+    const maxLength = Math.max(...results);
+
+    expect(minLength).toBeGreaterThanOrEqual(1);
+    expect(maxLength).toBeLessThanOrEqual(5);
+
+    // Should have some variation in lengths
+    const uniqueLengths = new Set(results);
+    expect(uniqueLengths.size).toBeGreaterThan(1);
+  });
+
+  it("should generate arrayElements with non-unique elements when unique is false", () => {
+    const options = ["x", "y"];
+    const result = record({
+      items: { type: "arrayElements", options, count: 5, unique: false },
+    });
+
+    expect(result).toHaveProperty("items");
+    expect(Array.isArray(result.items)).toBe(true);
+    expect(result.items).toHaveLength(5);
+
+    // All elements should be from the options array
+    result.items.forEach((item) => {
+      expect(options).toContain(item);
+    });
+
+    // With only 2 options and 5 items, duplicates are guaranteed when unique=false
+    const uniqueItems = new Set(result.items);
+    expect(uniqueItems.size).toBeLessThanOrEqual(2);
+  });
+
+  it("should handle arrayElements with zero count", () => {
+    const options = ["a", "b", "c"];
+    const result = record({
+      items: { type: "arrayElements", options, count: 0 },
+    });
+
+    expect(result).toHaveProperty("items");
+    expect(Array.isArray(result.items)).toBe(true);
+    expect(result.items).toHaveLength(0);
+  });
+
+  it("should handle arrayElements with negative variance resulting in zero count", () => {
+    const options = ["a", "b", "c"];
+    const results: number[] = [];
+
+    // Generate multiple records to test negative variance
+    for (let i = 0; i < 10; i++) {
+      const result = record({
+        items: { type: "arrayElements", options, count: 1, variance: 2 },
+      });
+      results.push(result.items.length);
+    }
+
+    // With count=1 and variance=2, minimum possible is 0 (1 - 2 = -1, clamped to 0)
+    const minLength = Math.min(...results);
+    expect(minLength).toBeGreaterThanOrEqual(0);
+
+    // Should include some zero-length arrays
+    expect(results).toContain(0);
+  });
+
   it("should generate a record with multiple fields of different types", () => {
     const result = record({
       name: "personName",

@@ -26,6 +26,7 @@ const TYPE = {
   // Other types
   featureFlags: "featureFlags",
   arrayElement: "arrayElement",
+  arrayElements: "arrayElements",
 } as const;
 
 type StringType =
@@ -91,10 +92,30 @@ interface BooleanDefinition extends BaseDefinition {
   trueChance: number;
 }
 
-interface ArrayElementDefinition<TArrayElementOptions extends any[] = any[]>
-  extends BaseDefinition {
+interface ArrayElementDefinition<
+  TArrayElementOptions extends readonly any[] = readonly any[],
+> extends BaseDefinition {
   type: typeof TYPE.arrayElement;
   options: TArrayElementOptions;
+}
+
+interface ArrayElementsDefinition<
+  TArrayElementOptions extends readonly any[] = readonly any[],
+> extends BaseDefinition {
+  type: typeof TYPE.arrayElements;
+  options: TArrayElementOptions;
+  /**
+   * The count of array elements. Default is 1.
+   */
+  count: number;
+  /**
+   * The variance of the count of array elements. Default is 0.
+   */
+  variance?: number;
+  /**
+   * If true, the array elements will be unique. Default is true.
+   */
+  unique?: boolean;
 }
 
 interface DateDefinition extends BaseDefinition {
@@ -115,6 +136,7 @@ type FieldDefinition =
   | UUIDDefinition
   | BooleanDefinition
   | ArrayElementDefinition
+  | ArrayElementsDefinition
   | DateDefinition
   | Type;
 
@@ -129,6 +151,9 @@ const FALLBACKS = {
   trueChance: 0.5,
   featureFlagsCount: 5,
   arrayElementOptions: ["Basic", "Premium", "Enterprise"],
+  arrayElementsCount: 1,
+  arrayElementsVariance: 0,
+  arrayElementsUnique: true,
 } as const;
 
 export { TYPE, FALLBACKS };
