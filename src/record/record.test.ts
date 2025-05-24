@@ -117,30 +117,6 @@ describe("record", () => {
     expect(uniqueColors.size).toBe(result.colors.length);
   });
 
-  it("should generate arrayElements with variance", () => {
-    const options = ["a", "b", "c", "d", "e", "f"];
-    const results: number[] = [];
-
-    // Generate multiple records to test variance
-    for (let i = 0; i < 20; i++) {
-      const result = record({
-        items: { type: "arrayElements", options, count: 3, variance: 2 },
-      });
-      results.push(result.items.length);
-    }
-
-    // With count=3 and variance=2, we should see lengths between 1 and 5
-    const minLength = Math.min(...results);
-    const maxLength = Math.max(...results);
-
-    expect(minLength).toBeGreaterThanOrEqual(1);
-    expect(maxLength).toBeLessThanOrEqual(5);
-
-    // Should have some variation in lengths
-    const uniqueLengths = new Set(results);
-    expect(uniqueLengths.size).toBeGreaterThan(1);
-  });
-
   it("should generate arrayElements with non-unique elements when unique is false", () => {
     const options = ["x", "y"];
     const result = record({
@@ -170,26 +146,6 @@ describe("record", () => {
     expect(result).toHaveProperty("items");
     expect(Array.isArray(result.items)).toBe(true);
     expect(result.items).toHaveLength(0);
-  });
-
-  it("should handle arrayElements with negative variance resulting in zero count", () => {
-    const options = ["a", "b", "c"];
-    const results: number[] = [];
-
-    // Generate multiple records to test negative variance
-    for (let i = 0; i < 10; i++) {
-      const result = record({
-        items: { type: "arrayElements", options, count: 1, variance: 2 },
-      });
-      results.push(result.items.length);
-    }
-
-    // With count=1 and variance=2, minimum possible is 0 (1 - 2 = -1, clamped to 0)
-    const minLength = Math.min(...results);
-    expect(minLength).toBeGreaterThanOrEqual(0);
-
-    // Should include some zero-length arrays
-    expect(results).toContain(0);
   });
 
   it("should generate a record with multiple fields of different types", () => {

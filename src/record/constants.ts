@@ -105,13 +105,20 @@ interface ArrayElementsDefinition<
   type: typeof TYPE.arrayElements;
   options: TArrayElementOptions;
   /**
-   * The count of array elements. Default is 1.
+   * The count of array elements. Default is 1. If both count and
+   * min/max are provided, count takes precedence.
    */
-  count: number;
+  count?: number;
   /**
-   * The variance of the count of array elements. Default is 0.
+   * The minimum count of array elements. Default is 1. If both count and
+   * min/max are provided, count takes precedence.
    */
-  variance?: number;
+  min?: number;
+  /**
+   * The maximum count of array elements. Default is 1. If both count and
+   * min/max are provided, count takes precedence.
+   */
+  max?: number;
   /**
    * If true, the array elements will be unique. Default is true.
    */
@@ -151,8 +158,8 @@ const FALLBACKS = {
   trueChance: 0.5,
   featureFlagsCount: 5,
   arrayElementOptions: ["Basic", "Premium", "Enterprise"],
-  arrayElementsCount: 1,
-  arrayElementsVariance: 0,
+  arrayElementsMin: 1,
+  arrayElementsMax: 1,
   arrayElementsUnique: true,
 } as const;
 

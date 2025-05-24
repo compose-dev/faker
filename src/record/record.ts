@@ -123,10 +123,14 @@ function generateRecord<T extends Record<string, FieldDefinition>>(
         break;
       }
       case TYPE.arrayElements: {
+        const min = object.count ?? object.min ?? FALLBACKS.arrayElementsMin;
+        const max = object.count ?? object.max ?? FALLBACKS.arrayElementsMax;
+
+        const count = Math.floor(Math.random() * (max - min + 1)) + min;
+
         row[key] = helpers.array.pickMultiple(
           object.options ?? FALLBACKS.arrayElementOptions,
-          object.count ?? FALLBACKS.arrayElementsCount,
-          object.variance ?? FALLBACKS.arrayElementsVariance,
+          count,
           object.unique ?? FALLBACKS.arrayElementsUnique
         );
         break;
