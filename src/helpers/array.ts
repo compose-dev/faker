@@ -1,4 +1,4 @@
-function pick<T extends readonly any[]>(array: T) {
+function pick<T extends readonly any[]>(array: T): T[number] {
   return array[Math.floor(Math.random() * array.length)];
 }
 
@@ -6,7 +6,7 @@ function pickMultiple<T extends readonly any[]>(
   array: T,
   count: number,
   unique: boolean = true
-) {
+): T[number][] {
   if (count < 0) {
     throw new Error(`Count is less than 0: ${count}`);
   }
