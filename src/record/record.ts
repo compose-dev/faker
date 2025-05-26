@@ -47,7 +47,10 @@ type RecordReturnType<T extends Record<string, FieldDefinition>> = {
 };
 
 function generateRecord<T extends Record<string, FieldDefinition>>(
-  fields: T
+  fields: T,
+  options: {
+    index?: number;
+  } = {}
 ): Prettify<RecordReturnType<T>> {
   const row: Record<string, any> = {};
 
@@ -74,6 +77,10 @@ function generateRecord<T extends Record<string, FieldDefinition>>(
         row[key] = primitives.companyName();
         break;
       }
+      case TYPE.phoneNumber: {
+        row[key] = primitives.phoneNumber();
+        break;
+      }
       case TYPE.int: {
         row[key] = primitives.int(
           object.min ?? FALLBACKS.minInt,
@@ -87,6 +94,18 @@ function generateRecord<T extends Record<string, FieldDefinition>>(
           object.max ?? FALLBACKS.maxFloat,
           object.decimals ?? FALLBACKS.floatDecimals
         );
+        break;
+      }
+      case TYPE.index: {
+        const idx = options.index;
+
+        if (idx === undefined) {
+          throw new Error(
+            "No index provided. If generating a single recording, use the `int` type to generate an index."
+          );
+        }
+
+        row[key] = idx;
         break;
       }
       case TYPE.email: {
@@ -151,7 +170,7 @@ function generateRecords<T extends Record<string, FieldDefinition>>(
   const rows: RecordReturnType<T>[] = [];
 
   for (let i = 0; i < count; i++) {
-    rows.push(generateRecord(fields));
+    rows.push(generateRecord(fields, { index: i }));
   }
 
   return rows;

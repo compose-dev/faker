@@ -23,9 +23,14 @@ function generateDate(min: Date, max: Date) {
   );
 }
 
+function generatePhoneNumber() {
+  return `${generateInt(200, 999)}-${generateInt(200, 999)}-${generateInt(2000, 9999)}`;
+}
+
 export {
   generateInt as int,
   generateFloat as float,
   generateBoolean as boolean,
   generateDate as date,
+  generatePhoneNumber as phoneNumber,
 };

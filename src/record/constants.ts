@@ -11,11 +11,13 @@ const TYPE = {
   personLastName: "personLastName",
   companyName: "companyName",
   email: "email",
+  phoneNumber: "phoneNumber",
   uuid: "uuid",
 
   // Number types
   int: "int",
   float: "float",
+  index: "index",
 
   // Boolean types
   boolean: "boolean",
@@ -35,9 +37,10 @@ type StringType =
   | typeof TYPE.personLastName
   | typeof TYPE.companyName
   | typeof TYPE.email
+  | typeof TYPE.phoneNumber
   | typeof TYPE.uuid;
 
-type NumberType = typeof TYPE.int | typeof TYPE.float;
+type NumberType = typeof TYPE.int | typeof TYPE.float | typeof TYPE.index;
 
 type DateType = typeof TYPE.date;
 
@@ -59,6 +62,10 @@ interface PersonLastNameDefinition extends BaseDefinition {
 
 interface CompanyNameDefinition extends BaseDefinition {
   type: typeof TYPE.companyName;
+}
+
+interface PhoneNumberDefinition extends BaseDefinition {
+  type: typeof TYPE.phoneNumber;
 }
 
 interface IntDefinition extends BaseDefinition {
@@ -136,6 +143,7 @@ type FieldDefinition =
   | PersonFirstNameDefinition
   | PersonLastNameDefinition
   | CompanyNameDefinition
+  | PhoneNumberDefinition
   | IntDefinition
   | FloatDefinition
   | EmailDefinition
